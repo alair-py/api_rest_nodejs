@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const connection = require("./database/Database");
+const cors = require("cors");
 
 //Exporta Model
 const Jogos = require("./database/Jogos");
@@ -9,6 +10,9 @@ const Jogos = require("./database/Jogos");
 //Utiliza o Body-Parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+//Utiliza Cors
+app.use(cors());
 
 //Testa conexão com banco
 connection.authenticate().then(() => {
