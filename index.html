@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja de Games</title>
+
+
+</head>
+
+<body>
+    <h4>Lista de Jogos</h4>
+    <hr>
+    <ul id="games">
+
+    </ul>
+
+    <hr>
+    <h4>Novo jogo</h4>
+    <input type="text" title="titulo" id="titulo" placeholder="Titulo"><br>
+    <input type="number" title="ano" id="ano" placeholder="Lançamento"><br>
+    <input type="number" title="preco" id="preco" placeholder="Preço"><br>
+    <button onclick="cadastraJogo()" type="button">Cadastrar</button>
+
+    <br>
+    <hr>
+
+    <h4>Editar jogo</h4>
+    <input type="text" title="idEdit" id="idEdit" placeholder="ID" readonly><br>
+    <input type="text" title="tituloEdit" id="tituloEdit" placeholder="Titulo"><br>
+    <input type="number" title="anoEdit" id="anoEdit" placeholder="Lançamento"><br>
+    <input type="number" title="precoEdit" id="precoEdit" placeholder="Preço"><br>
+    <button onclick="atualizaJogo()" type="button">Editar</button>
+
+</body>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+<script>
+
+    //Funcao de cadastro de jogos
+    function cadastraJogo() {
+        //Recupera valores dos inputs correspondentes e guarda em vars
+        var tituloInput = document.getElementById("titulo").value;
+        var anoInput = document.getElementById("ano").value;
+        var precoInput = document.getElementById("preco").value;
+
+        //guarda vars em um JSON
+        var game = {
+            titulo: tituloInput,
+            ano: anoInput,
+            preco: precoInput
+        }
+
+        //Usa rota de cadastro da API e passa o JSON
+        axios.post("http://localhost:3000/game", game).then(response => {
+            if (response.status = 200) {
+                alert("Jogo cadastrado com sucesso.");
+            }
+        }).catch(error => {
+            console.log(error);
+        });
+
+
+    }
+
+
+
+    //Funcao de deleção de jogos
+    function deletaJogo(item) {
+        var id = item.getAttribute("data-id");
+        axios.delete("http://localhost:3000/game/" + id).then(response => {
+            alert("Jogo deletado!");
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
+
+    //Funcao de carregar jogos no formulario de edição
+    function carregaJogo(item) {
+
+        var id = item.getAttribute("data-id");
+        var titulo = item.getAttribute("data-titulo");
+        var ano = item.getAttribute("data-ano");
+        var preco = item.getAttribute("data-preco");
+
+
+        var idCampo = document.getElementById("idEdit");
+        idCampo.value = id;
+
+        var idTitulo = document.getElementById("tituloEdit");
+        idTitulo.value = titulo;
+
+        var idAno = document.getElementById("anoEdit");
+        idAno.value = ano;
+
+        var idPreco = document.getElementById("precoEdit");
+        idPreco.value = preco;
+
+    };
+
+
+    //Funcao de enviar update para o backend
+    function atualizaJogo() {
+        //Recupera valores dos inputs correspondentes e guarda em vars
+        var idEdit = document.getElementById("idEdit").value;
+        var tituloEdit = document.getElementById("tituloEdit").value;
+        var anoEdit = document.getElementById("anoEdit").value;
+        var precoEdit = document.getElementById("precoEdit").value;
+
+        //guarda vars em um JSON
+        var game = {
+            titulo: tituloEdit,
+            ano: anoEdit,
+            preco: precoEdit
+        }
+
+        //Usa rota de cadastro da API e passa o JSON
+        axios.put("http://localhost:3000/game/" + idEdit, game).then(response => {
+            if (response.status = 200) {
+                alert("Jogo atualizado com sucesso.");
+            }
+        }).catch(error => {
+            console.log(error);
+        });
+
+    }
+
+
+    //Retorna todos jogos
+    axios.get("http://localhost:3000/games").then(response => {
+
+        //Guarda array de jogos vindo do retorno do banco
+        var games = response.data.jogos;
+        //Lista setada com elemento ID games
+        var list = document.getElementById('games');
+
+
+        //Percorrer todos elementos do array games
+        games.forEach(game => {
+
+            //Variavel para fazer criacao de elemento LI para lista
+            var item = document.createElement("li");
+
+            //Atributos customizados
+            item.setAttribute("data-id", game.id);
+            item.setAttribute("data-titulo", game.titulo);
+            item.setAttribute("data-ano", game.ano);
+            item.setAttribute("data-preco", game.preco);
+
+            //LI cm juncao de conteudo HTML dentro (com dados do array)
+            item.innerHTML = game.id + ' - ' + game.titulo + ' - R$ ' + game.preco;
+
+            //Botão DELETE para cada elemento
+            var deleteBtn = document.createElement("button");
+            deleteBtn.innerHTML = "Deletar";
+            deleteBtn.addEventListener("click", function () {
+                deletaJogo(item);
+            });
+
+            item.appendChild(deleteBtn);
+
+            //Botão EDITAR para cada elemento
+            var editBtn = document.createElement("button");
+            editBtn.innerHTML = "Editar";
+            editBtn.addEventListener("click", function () {
+                carregaJogo(item);
+            });
+
+            item.appendChild(editBtn);
+
+
+            //Pra cada item criar na lista id games um elemento lista criado e preenchido anteriormente
+            list.appendChild(item);
+        });
+    }).catch(error => {
+
+        console.log(error);
+
+    });
+
+</script>
+
+</html>
