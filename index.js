@@ -3,13 +3,21 @@ const app = express();
 const bodyParser = require("body-parser");
 const connection = require("./database/Database");
 const cors = require("cors");
+const auth = require("./middlewares/Auth");
 
 //Exporta Model
-const Jogos = require("./database/Jogos");
+const Jogos = require("./jogos/Jogos");
+const Users = require("./users/Users");
+
+//Importa routers
+const userController = require("./users/UserController");
 
 //Utiliza o Body-Parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+//Rotas das variaveis importadas
+app.use("/", userController);
 
 //Utiliza Cors
 app.use(cors());
@@ -21,6 +29,10 @@ connection.authenticate().then(() => {
     console.log(error);
 });
 
+
+
+//---------------------------------------------------------------------------------
+//VVVVVVVVVVVVV ROTAS DE CRUD VVVVVVVVVVVVVVVVVV
 
 
 //EndPoint que retorna TODOS itens do banco
@@ -66,7 +78,7 @@ app.get("/game/:id", (req, res) => {
 
 
 //EndPoint que CADASTRA dados no banco
-app.post("/game", (req, res) => {
+app.post("/game", auth, (req, res) => {
     var { titulo, ano, preco } = req.body;
 
     if (titulo == undefined || titulo == '' || isNaN(ano) || isNaN(preco)) {
@@ -87,7 +99,7 @@ app.post("/game", (req, res) => {
 
 
 //EndPoint que DELETA dados no banco
-app.delete("/game/:id", (req, res) => {
+app.delete("/game/:id", auth, (req, res) => {
     //Verifica se é um número, caso não, retorna 400
     if (isNaN(req.params.id) || req.params.id == undefined) {
         res.sendStatus(400);
@@ -108,7 +120,7 @@ app.delete("/game/:id", (req, res) => {
 
 
 //EndPoint que EDITA dados no banco
-app.put("/game/:id", (req, res) => {
+app.put("/game/:id", auth, (req, res) => {
 
     //Verifica se id é um valor válido (número)
     if (!isNaN(req.params.id) || req.params.id != undefined) {
@@ -138,6 +150,10 @@ app.put("/game/:id", (req, res) => {
     }
 
 });
+
+
+
+//---------------------------------------------------------------------------------
 
 
 
