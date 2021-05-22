@@ -11,8 +11,15 @@
 </head>
 
 <body>
-    <h4>Lista de Jogos</h4>
+    <h4>Login</h4>
+    <input type="text" id="email" placeholder="Seu email"><br>
+    <input type="password" id="password" placeholder="Sua senha"><br>
+    <button onclick="login()">Entrar</button>
+
+
+
     <hr>
+    <h4>Lista de Jogos</h4>
     <ul id="games">
 
     </ul>
@@ -44,6 +51,38 @@
 
 <script>
 
+    //Config de tokens
+    var axiosConfig = {
+        headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+        }
+    }
+
+
+    //Funcao de login
+    function login() {
+
+        //Armaneza campos do input de login
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+
+        //Envia para rota de login na API
+        axios.post("http://localhost:3000/login", { email, password }).then(res => {
+
+            //Se retorno OK, vem junto um token da API, armazenamos ela no LocalStorage do navegador!
+            var token = res.data.token;
+            localStorage.setItem("token", token);
+            //Atualiza token armazenado toda vez que novo login é efetuado.
+            axiosConfig.headers.Authorization = "Bearer " + localStorage.getItem("token");
+
+        }).catch(error => {
+
+            console.log(error);
+            alert("Login inválido.");
+        })
+    }
+
+
     //Funcao de cadastro de jogos
     function cadastraJogo() {
         //Recupera valores dos inputs correspondentes e guarda em vars
@@ -59,7 +98,7 @@
         }
 
         //Usa rota de cadastro da API e passa o JSON
-        axios.post("http://localhost:3000/game", game).then(response => {
+        axios.post("http://localhost:3000/game", game, axiosConfig).then(response => {
             if (response.status = 200) {
                 alert("Jogo cadastrado com sucesso.");
             }
@@ -75,7 +114,7 @@
     //Funcao de deleção de jogos
     function deletaJogo(item) {
         var id = item.getAttribute("data-id");
-        axios.delete("http://localhost:3000/game/" + id).then(response => {
+        axios.delete("http://localhost:3000/game/" + id, axiosConfig).then(response => {
             alert("Jogo deletado!");
         }).catch(error => {
             console.log(error);
@@ -123,7 +162,7 @@
         }
 
         //Usa rota de cadastro da API e passa o JSON
-        axios.put("http://localhost:3000/game/" + idEdit, game).then(response => {
+        axios.put("http://localhost:3000/game/" + idEdit, game, axiosConfig).then(response => {
             if (response.status = 200) {
                 alert("Jogo atualizado com sucesso.");
             }
