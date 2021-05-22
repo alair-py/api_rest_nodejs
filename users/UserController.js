@@ -4,6 +4,12 @@ const User = require("./Users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const auth = require("../middlewares/Auth");
+const cors = require("cors");
+
+
+
+//Utiliza Cors
+router.use(cors());
 
 
 //Senha secreta do JWT
@@ -60,7 +66,7 @@ router.get("/login", (req, res) => {
 
 
 //ROTA DE AUTENTICACAO DE USUARIO
-router.post("/login", auth, (req, res) => {
+router.post("/login", (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
 
