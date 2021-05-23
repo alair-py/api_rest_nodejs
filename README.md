@@ -45,7 +45,7 @@ Necessário parâmetro ID.
 }
 ```
 404 - Não encontrado. Motivos: "ID não existe no banco de dados."  
-400 - Requisição inválida. Motivos: "ID inválido, somente números aceitos."
+400 - Requisição inválida. Motivos: "ID inválido, somente números aceitos."  
 
 ### POST /game
 Cadastra novo jogo no banco de dados.
@@ -62,7 +62,7 @@ Exemplo:
 #### Respostas
 200 - OK!  
 400 - Requisição inválida. Motivos: "Titulo vazio; Ano e/ou Preço não é um número."  
-401 - Não autorizado. Motivos: "Token inválido."
+401 - Não autorizado. Motivos: "Token inválido."  
 
 
 ### DELETE /game
@@ -71,8 +71,8 @@ Deleta jogo especifico baseado no ID passado.
 Necessário parâmetro ID.
 #### Respostas
 200 - OK!  
-400 - Requisição inválida. Motivos: "ID não é um número ou ID é undefined."
-401 - Não autorizado. Motivos: "Token inválido."
+400 - Requisição inválida. Motivos: "ID não é um número ou ID é undefined."  
+401 - Não autorizado. Motivos: "Token inválido."  
 
 
 ### PUT /game
@@ -81,8 +81,8 @@ Edita jogo especifico baseado no ID passado.
 Necessário parâmetro ID.
 #### Respostas
 200 - OK!  
-400 - Requisição inválida. Motivos: "ID não é um número ou ID é undefined."
-401 - Não autorizado. Motivos: "Token inválido."
+400 - Requisição inválida. Motivos: "ID não é um número ou ID é undefined."  
+401 - Não autorizado. Motivos: "Token inválido."  
 
 
 ## EndPoints de Usuários
@@ -104,4 +104,4 @@ Necessário parâmetro "email" e "password".
 200 - OK! (Cria e retorna TOKEN).  
 401 - Não autorizado. Motivos: "Email ou Senha inválidos."  
 404 - Não encontrado. Motivos: "Email não encontrado."  
-500 - Erro interno no servidor. Motivos: "Erro ao gerar TOKEN."
+500 - Erro interno no servidor. Motivos: "Erro ao gerar TOKEN."  
